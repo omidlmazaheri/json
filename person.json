@@ -1,0 +1,7 @@
+{
+    "name": "Ali",
+    "age": 25,
+    "isStudent": true,
+    "hobbies": ["coding", "reading"],
+    "address": null
+  }
