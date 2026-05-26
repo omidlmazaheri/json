@@ -1,94 +1,30 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نمایش داده‌های JSON</title>
-    <style>
-        body {
-            font-family: Tahoma, Arial, sans-serif;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        h2 {
-            color: #333;
-            border-bottom: 2px solid #007BFF;
-            padding-bottom: 10px;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            background: #e9ecef;
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 4px;
-        }
-        .label {
-            font-weight: bold;
-            color: #555;
-        }
-    </style>
+    <title>نمایش JSON</title>
 </head>
 <body>
 
-    <div id="user-info" class="card">
-        <p>در حال بارگذاری...</p>
-    </div>
+    <h1>اطلاعات من:</h1>
+    <div id="result">در حال بارگذاری...</div>
 
     <script>
-        // فرض می‌کنیم فایل data.json در کنار همین فایل html قرار دارد
-        // اگر فایل را ندارید، می‌توانید از یک URL نمونه استفاده کنید
-        const jsonUrl = 'data.json'; 
-
-        fetch(jsonUrl)
-            .then(response => {
-                // بررسی می‌کنیم که آیا درخواست موفقیت‌آمیز بوده است یا خیر
-                if (!response.ok) {
-                    throw new Error('خطا در دریافت فایل: ' + response.status);
-                }
-                // پاسخ را به فرمت JSON تبدیل می‌کنیم
-                return response.json();
-            })
+        // 1. درخواست به فایل data.json
+        fetch('data.json')
+            .then(response => response.json()) // تبدیل متن به آبجکت جاوااسکریپت
             .then(data => {
-                // داده‌های JSON به یک آبجکت جاوااسکریپت تبدیل شده‌اند
-                console.log(data); // برای دیباگ در کنسول مرورگر
-
-                // ساختن ساختار HTML بر اساس داده‌ها
-                const container = document.getElementById('user-info');
-                
-                // ایجاد المان‌های HTML
-                container.innerHTML = `
-                    <h2>اطلاعات کاربر</h2>
-                    <p><span class="label">نام:</span> ${data.name}</p>
-                    <p><span class="label">سن:</span> ${data.age}</p>
-                    <p><span class="label">دانشجو:</span> ${data.isStudent ? 'بله' : 'خیر'}</p>
-                    
-                    <div>
-                        <span class="label">علایق:</span>
-                        <ul>
-                            ${data.hobbies.map(hobby => `<li>${hobby}</li>`).join('')}
-                        </ul>
-                    </div>
-
-                    <p><span class="label">آدرس:</span> ${data.address || 'ثبت نشده'}</p>
+                // 2. نمایش اطلاعات در صفحه
+                const html = `
+                    <p><strong>نام:</strong> ${data.name}</p>
+                    <p><strong>سن:</strong> ${data.age}</p>
+                    <p><strong>دانشجو:</strong> ${data.isStudent ? 'بله' : 'خیر'}</p>
+                    <p><strong>علایق:</strong> ${data.hobbies.join('، ')}</p>
                 `;
+                document.getElementById('result').innerHTML = html;
             })
-            .catch(error => {
-                console.error('مشکلی پیش آمد:', error);
-                document.getElementById('user-info').innerHTML = `
-                    <p style="color: red;">خطایی در دریافت اطلاعات رخ داد. لطفا کنسول مرورگر را بررسی کنید.</p>
-                `;
-            });
+            .catch(error => console.error('خطا:', error));
     </script>
+
 </body>
 </html>
